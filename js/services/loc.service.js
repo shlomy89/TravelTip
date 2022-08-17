@@ -1,12 +1,13 @@
+import { storageService } from './storage.service.js'
 export const locService = {
-    getLocs
+    getLocs,
+    getPosOnMapClicked
 }
+var gNextId = 101
+const STORAGE_KEY = 'locationDB'
 
+const locs = []
 
-const locs = [
-    { name: 'Greatplace', lat: 32.047104, lng: 34.832384 }, 
-    { name: 'Neveragain', lat: 32.047201, lng: 34.832581 }
-]
 
 function getLocs() {
     return new Promise((resolve, reject) => {
@@ -16,4 +17,24 @@ function getLocs() {
     })
 }
 
+function getPosOnMapClicked(ev) {
+    let pos = ev.latLng.toJSON()
 
+    var location = {
+        id: gNextId++,
+        name: 'Greatplace',
+        lat: pos.lat,
+        lng: pos.lng,
+        // weather,
+        // updatedAt,
+    }
+    locs.push(location)
+    console.log(locs);
+    _saveLocsToStorage(locs)
+}
+
+
+
+function _saveLocsToStorage(location) {
+    storageService.saveToStorage(STORAGE_KEY, locs)
+}
